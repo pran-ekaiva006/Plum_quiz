@@ -1,6 +1,6 @@
 # AI-Assisted Knowledge Quiz
 
-An interactive quiz application that generates multiple-choice questions using AI (Groq API). Built with React, TypeScript, and Zustand for state management.
+An interactive quiz application that generates multiple-choice questions using AI (Groq API). Built with React and Zustand for state management.
 
 ## Features
 
@@ -14,7 +14,7 @@ An interactive quiz application that generates multiple-choice questions using A
 
 ## Tech Stack
 
-- **Frontend**: React 18 + TypeScript
+- **Frontend**: React 18 + JavaScript (Vite)
 - **State Management**: Zustand
 - **Validation**: Zod
 - **AI API**: Groq (LLaMA 3.1-8b-instant)
@@ -60,35 +60,22 @@ npm run dev
 
 If you're using the local proxy (recommended for CORS handling):
 
-1. Create a simple proxy server on port 3001:
-```javascript
-// server.js
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.post('/api/generate', async (req, res) => {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.GROQ_API_KEY}`
-    },
-    body: JSON.stringify(req.body)
-  });
-  const data = await response.json();
-  res.json(data);
-});
-
-app.listen(3001, () => console.log('Proxy running on port 3001'));
+1. Navigate to the server directory:
+```bash
+cd server
+npm install
 ```
 
-2. Run the proxy:
+2. Create a `.env` file in the `server` directory:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.1-8b-instant
+PORT=3001
+```
+
+3. Run the proxy:
 ```bash
-node server.js
+npm run dev
 ```
 
 ## Project Structure
@@ -96,18 +83,18 @@ node server.js
 ```
 src/
 ├── components/
-│   ├── TopicPicker.tsx    # Topic selection screen
-│   └── QuizRunner.tsx     # Quiz interface and logic
+│   ├── TopicPicker.jsx    # Topic selection screen
+│   └── QuizRunner.jsx     # Quiz interface and logic
 ├── services/
-│   └── aiService.ts       # AI API integration
+│   └── aiService.js       # AI API integration
 ├── state/
-│   └── quizStore.ts       # Zustand store
+│   └── quizStore.js       # Zustand store
 ├── types/
-│   └── quiz.ts            # TypeScript types and Zod schemas
-├── utils.ts               # Utility functions
-├── App.tsx                # Main app component
+│   └── quiz.js            # Zod schemas
+├── utils.js               # Utility functions
+├── App.jsx                # Main app component
 ├── App.css                # Transition styles
-└── main.tsx               # Entry point
+└── main.jsx               # Entry point
 ```
 
 ## Usage
@@ -177,4 +164,4 @@ Pranjal Kumar Verma - [GitHub](https://github.com/pran-ekaiva006)
 
 ---
 
-Built with ❤️ using React + TypeScript + Groq AI
+Built with ❤️ using React + JavaScript + Groq AI
