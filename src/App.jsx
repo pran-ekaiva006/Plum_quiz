@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './App.css'
-import TopicPicker from './components/TopicPicker'
-import QuizRunner from './components/QuizRunner'
-import { useQuizStore } from './state/quizStore'
+import TopicPicker from './components/TopicPicker.jsx'
+import QuizRunner from './components/QuizRunner.jsx'
+import { useQuizStore } from './state/quizStore.js'
 
 export default function App() {
   const { topic, reset, setTopic } = useQuizStore()
-  const [isTransitioning, setIsTransitioning] = React.useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-  const handleStart = (selectedTopic: string) => {
+  const handleStart = (selectedTopic) => {
     setIsTransitioning(true)
     setTimeout(() => {
       setTopic(selectedTopic)

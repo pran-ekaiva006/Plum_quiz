@@ -1,34 +1,59 @@
-import React, { useEffect, useMemo } from 'react'
-import { useQuizStore } from '../state/quizStore'
-import { generateQuiz, generateFeedback } from '../services/aiService'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useQuizStore } from '../state/quizStore.js'
+import { generateQuiz, generateFeedback } from '../services/aiService.js'
 
-export default function QuizRunner({ onReset }: { onReset: () => void }) {
-  const { topic, quiz, setQuiz, currentIndex, next, prev, answers, answer, loading, setLoading, setError, error } = useQuizStore()
-  const [feedback, setFeedback] = React.useState<string | null>(null)
-  const [fbLoading, setFbLoading] = React.useState(false)
+/**
+ * QuizRunner component for quiz interface
+ * @param {Object} props
+ * @param {() => void} props.onReset - Callback to reset quiz
+ */
+export default function QuizRunner({ onReset }) {
+  const { 
+    topic, 
+    quiz, 
+    setQuiz, 
+    currentIndex, 
+    next, 
+    prev, 
+    answers, 
+    answer, 
+    loading, 
+    setLoading, 
+    setError, 
+    error 
+  } = useQuizStore()
+  
+  const [feedback, setFeedback] = useState(null)
+  const [fbLoading, setFbLoading] = useState(false)
 
   useEffect(() => {
     if (!topic || quiz) return
+    
     const loadQuiz = async () => {
       try {
         setLoading(true)
         setError(null)
         const q = await generateQuiz(topic)
         setQuiz(q)
-      } catch (e: any) {
+      } catch (e) {
         setError(e?.message ?? 'Failed to generate quiz')
       } finally {
         setLoading(false)
       }
     }
+    
     loadQuiz()
   }, [topic, quiz, setQuiz, setLoading, setError])
 
-  const completed = quiz ? Object.keys(answers).length === quiz.questions.length : false
+  const completed = useMemo(() => {
+    return quiz ? Object.keys(answers).length === quiz.questions.length : false
+  }, [quiz, answers])
 
   const score = useMemo(() => {
     if (!completed || !quiz) return 0
-    return quiz.questions.reduce((acc, qq) => acc + ((answers[qq.id] === qq.correctIndex) ? 1 : 0), 0)
+    return quiz.questions.reduce((acc, qq) => {
+      return acc + ((answers[qq.id] === qq.correctIndex) ? 1 : 0)
+    }, 0)
   }, [completed, quiz, answers])
 
   if (!topic) return null
@@ -41,7 +66,7 @@ export default function QuizRunner({ onReset }: { onReset: () => void }) {
       setFeedback(null)
       const q = await generateQuiz(topic)
       setQuiz(q)
-    } catch (e: any) {
+    } catch (e) {
       setError(e?.message ?? 'Failed to generate quiz')
     } finally {
       setLoading(false)
@@ -90,7 +115,7 @@ export default function QuizRunner({ onReset }: { onReset: () => void }) {
     try {
       const fb = await generateFeedback(quiz.topic, score)
       setFeedback(fb.message)
-    } catch (e: any) {
+    } catch (e) {
       setFeedback("Couldn't fetch feedback right now. Try again later.")
     } finally {
       setFbLoading(false)

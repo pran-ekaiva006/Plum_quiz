@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const TOPICS = [
   { value: 'Wellness', icon: '🧘', description: 'Health & well-being practices' },
@@ -8,9 +8,14 @@ const TOPICS = [
   { value: 'Mental Health', icon: '🧠', description: 'Psychological wellness' }
 ]
 
-export default function TopicPicker({ onStart }: { onStart: (t: string) => void }) {
-  const [selected, setSelected] = React.useState<string>('')
-  const [hoveredTopic, setHoveredTopic] = React.useState<string | null>(null)
+/**
+ * TopicPicker component for selecting quiz topic
+ * @param {Object} props
+ * @param {(topic: string) => void} props.onStart - Callback when quiz starts
+ */
+export default function TopicPicker({ onStart }) {
+  const [selected, setSelected] = useState('')
+  const [hoveredTopic, setHoveredTopic] = useState(null)
 
   return (
     <div className="app-card landing-page">

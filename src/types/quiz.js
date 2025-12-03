@@ -12,11 +12,10 @@ export const QuizPayloadSchema = z.object({
   questions: z.array(QuizQuestionSchema).length(5)
 })
 
-export type QuizQuestion = z.infer<typeof QuizQuestionSchema>
-export type QuizPayload = z.infer<typeof QuizPayloadSchema>
+
 
 export const FeedbackSchema = z.object({
   score: z.number().int().min(0).max(5),
   message: z.string()
 })
-export type Feedback = z.infer<typeof FeedbackSchema>
+
